@@ -1,0 +1,79 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+*.pyd
+*.so
+*.dll
+build/
+dist/
+wheels/
+*.egg-info
+*.egg
+
+# Virtual environments
+.venv
+venv/
+env/
+ENV/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+*~
+.project
+.pydevproject
+.settings/
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ChromaDB persistent storage
+chroma_db/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+logs/
+tmp/
+
+# UV and pip cache
+.uv/
+.cache/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb
+
+# pytest cache
+.pytest_cache/
+.tox/
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
