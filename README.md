@@ -14,11 +14,21 @@ An AI-powered application that allows you to summarize YouTube videos and ask qu
 
 The project is organized into modular components:
 
-- **`user_actions.py`**: Main orchestration layer with `summarize_video()` and `answer_question()` functions
-- **`chroma_util.py`**: ChromaDB and embedding utilities (chunking, indexing, retrieval)
-- **`chaining_util.py`**: LangChain prompt templates and chain creation
-- **`llm_utils.py`**: OpenAI LLM initialization and configuration
-- **`youtube_utils.py`**: YouTube transcript fetching and processing
+- **`utils/`**: All core functionality and utility modules
+  - **`youtube_utils.py`**: Main YouTube processing module
+    - `get_video_id()` - Extract video ID from URL
+    - `getTranscript()` - Fetch YouTube transcript
+    - `process_transcript()` - Clean and format transcript text
+    - `summarize_video()` - Generate video summaries
+    - `answer_question()` - Answer questions using RAG
+  - **`chroma_util.py`**: ChromaDB and embedding utilities
+    - `prepare_transcript_for_indexing()` - Chunks text and sets up embeddings
+    - `get_or_create_chroma_index()` - Unified index management
+    - `retrieve_and_format_context()` - Semantic search and formatting
+  - **`chaining_util.py`**: LangChain chains (simplified, all-in-one functions)
+    - `create_summary_chain()` - Complete summarization chain
+    - `answer_with_context()` - RAG pipeline (retrieve + generate)
+  - **`llm_utils.py`**: OpenAI LLM initialization and configuration
 - **`gradio_ui.py`**: Web interface using Gradio
 - **`main.py`**: Application entry point
 
@@ -87,7 +97,7 @@ The application will launch at `http://localhost:7860`
 ### Programmatic Usage
 
 ```python
-from ybot import summarize_video, answer_question
+from utils.youtube_utils import summarize_video, answer_question
 
 # Summarize a video
 video_url = "https://www.youtube.com/watch?v=VIDEO_ID"
@@ -106,11 +116,13 @@ answer = answer_question(video_url, question, use_existing_index=True)
 ## How It Works
 
 1. **Transcript Extraction**: Fetches the video transcript using `youtube-transcript-api`
-2. **Text Chunking**: Splits the transcript into manageable chunks using `RecursiveCharacterTextSplitter`
-3. **Embedding**: Converts chunks to vector embeddings using OpenAI's `text-embedding-3-small` model
-4. **Vector Storage**: Stores embeddings in ChromaDB for persistent, efficient retrieval
-5. **Retrieval**: Finds relevant chunks using similarity search
-6. **Generation**: Uses GPT-4o to generate answers based on retrieved context
+2. **Text Processing**: `prepare_transcript_for_indexing()` chunks the transcript and initializes embeddings in one step
+3. **Vector Storage**: `get_or_create_chroma_index()` stores embeddings in ChromaDB (persisted to `./chroma_db/`)
+4. **Question Answering**: `answer_with_context()` performs the complete RAG pipeline:
+   - Retrieves relevant chunks using similarity search
+   - Formats context for the LLM
+   - Generates answer using GPT-4o with retrieved context
+5. **Summarization**: `create_summary_chain()` generates concise summaries directly from the full transcript
 
 ## Technology Stack
 
@@ -126,12 +138,13 @@ answer = answer_question(video_url, question, use_existing_index=True)
 ```
 youtube_video_QA/
 ├── main.py                 # Application entry point
-├── ybot.py                 # Core orchestration logic
-├── chroma_util.py         # ChromaDB utilities
-├── chaining_util.py       # LangChain chains and prompts
-├── llm_utils.py           # LLM initialization
-├── youtube_utils.py       # YouTube transcript handling
 ├── gradio_ui.py           # Gradio web interface
+├── utils/                 # Core functionality and utility modules
+│   ├── __init__.py        # Package initializer
+│   ├── youtube_utils.py   # YouTube transcript handling, summarization, Q&A
+│   ├── chroma_util.py     # ChromaDB utilities
+│   ├── chaining_util.py   # LangChain chains and prompts
+│   └── llm_utils.py       # LLM initialization
 ├── pyproject.toml         # Project dependencies
 ├── .env                   # Environment variables (create this)
 ├── .gitignore            # Git ignore rules
@@ -162,9 +175,10 @@ ChromaDB stores embeddings in the `./chroma_db/` directory, allowing you to:
 
 ### Modular Architecture
 
-The codebase is designed for maintainability:
+The codebase is designed for maintainability and simplicity:
+- **Consolidated functions**: Related operations grouped together (e.g., `prepare_transcript_for_indexing()` does chunking + embedding setup)
 - **Separation of concerns**: Each module has a specific purpose
-- **Easy testing**: Modular functions are easier to test
+- **Easy testing**: Modular functions are easier to test and understand
 - **Flexible**: Swap out components (e.g., different LLMs or vector stores) easily
 
 ## Troubleshooting

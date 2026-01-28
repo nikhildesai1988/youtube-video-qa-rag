@@ -1,9 +1,9 @@
 import re
 import os
 from youtube_transcript_api import YouTubeTranscriptApi 
-from utils.llm_utils import setup_credentials, initialize_openai_llm
-from utils.chroma_util import prepare_transcript_for_indexing, get_or_create_chroma_index
-from utils.chaining_util import create_summary_chain, answer_with_context
+from .llm_utils import initialize_openai_llm
+from .chroma_util import prepare_transcript_for_indexing, get_or_create_chroma_index
+from .chaining_util import create_summary_chain, answer_with_context
 from dotenv import load_dotenv
 
 load_dotenv(override=True)
@@ -71,16 +71,15 @@ def summarize_video(video_url):
     if not processed_transcript:
         return "No transcript available for this video."
     
-    # Setup credentials and LLM
-    setup_credentials()
+    # Setup LLM
     api_key = os.getenv("OPENAI_API_KEY")
     llm = initialize_openai_llm("gpt-4o", api_key)
 
     # Create summary chain and generate summary
     summary_chain = create_summary_chain(llm)
-    summary = summary_chain.run({"transcript": processed_transcript})
+    result = summary_chain.invoke({"transcript": processed_transcript})
     
-    return summary
+    return result.content
 
 
 def answer_question(video_url, user_question, use_existing_index=False):
@@ -104,8 +103,7 @@ def answer_question(video_url, user_question, use_existing_index=False):
     if not processed_transcript or not user_question:
         return "Please provide a valid question and ensure the transcript has been fetched."
 
-    # Setup API key and LLM
-    setup_credentials()
+    # Setup LLM
     api_key = os.getenv("OPENAI_API_KEY")
     llm = initialize_openai_llm("gpt-4o", api_key)
 
