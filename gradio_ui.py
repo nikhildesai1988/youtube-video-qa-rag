@@ -1,5 +1,5 @@
 import gradio as gr
-from ybot import summarize_video, answer_question
+from user_actions import summarize_video, answer_question
 
 with gr.Blocks() as interface:
     # Input field for YouTube URL
