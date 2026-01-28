@@ -14,7 +14,7 @@ An AI-powered application that allows you to summarize YouTube videos and ask qu
 
 The project is organized into modular components:
 
-- **`ybot.py`**: Main orchestration layer with `summarize_video()` and `answer_question()` functions
+- **`user_actions.py`**: Main orchestration layer with `summarize_video()` and `answer_question()` functions
 - **`chroma_util.py`**: ChromaDB and embedding utilities (chunking, indexing, retrieval)
 - **`chaining_util.py`**: LangChain prompt templates and chain creation
 - **`llm_utils.py`**: OpenAI LLM initialization and configuration
@@ -183,14 +183,6 @@ If you want to start fresh, delete the `chroma_db/` directory:
 ```bash
 rm -rf chroma_db/
 ```
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
-
-[Add your license here]
 
 ## Acknowledgments
 
