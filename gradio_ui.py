@@ -4,14 +4,17 @@ from user_actions import summarize_video, answer_question
 with gr.Blocks() as interface:
     # Input field for YouTube URL
     video_url = gr.Textbox(label="YouTube Video URL", placeholder="Enter the YouTube Video URL")
+
+    summarize_btn = gr.Button("Summarize Video")
     
     # Outputs for summary and answer
     summary_output = gr.Textbox(label="Video Summary", lines=5)
+    
     question_input = gr.Textbox(label="Ask a Question About the Video", placeholder="Ask your question")
     answer_output = gr.Textbox(label="Answer to Your Question", lines=5)
 
     # Buttons for selecting functionalities after fetching transcript
-    summarize_btn = gr.Button("Summarize Video")
+    
     question_btn = gr.Button("Ask a Question")
 
     # Display status message for transcript fetch
